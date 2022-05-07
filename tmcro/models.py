@@ -50,6 +50,8 @@ class Member(models.Model):
     editor = models.BooleanField(default=False)
     # json to store all items/locations. Is null for Spectators
     playerData = models.JSONField(default=dict, blank=True, null=True)
+    # Whether the user in connected to the room with WS or not
+    active = models.BooleanField(default=False)
 
     def __str__(self):
         return self.get_role_display()+' '+self.user.name + ' in '+self.room.name

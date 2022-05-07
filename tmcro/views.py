@@ -1,7 +1,7 @@
 import random
 from django.shortcuts import render
 from django.http import JsonResponse
-from tmcro.models import Member, Room, User
+from tmcro.models import Member, Room, RoomHistory, User
 from django.core import serializers
 
 
@@ -28,10 +28,16 @@ def createRoom(request):
         member= Member()
         ### STATIC WHILE TESTING
         member.user = User.objects.get(id=3)
+        
         member.role = Member.MemberRole.PLAYER
         member.room = Room.objects.get(id=room.id)
         member.editor = True
         member.save()
+
+        roomHistory= RoomHistory()
+        roomHistory.room = room
+        roomHistory.log = "Room opened by "+member.user.name
+        roomHistory.save()
 
         return JsonResponse({"status":"OK","roomData":serializers.serialize('json',Room.objects.filter(id=room.id))},safe=0)
     else:

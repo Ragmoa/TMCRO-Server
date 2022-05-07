@@ -27,17 +27,17 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
+    'tmcro',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'tmcro',
 ]
 
 MIDDLEWARE = [
@@ -73,7 +73,26 @@ WSGI_APPLICATION = 'tmcro_api.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = {}
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql', 
+        'NAME': 'tmcro',
+        'USER': 'root',
+        'HOST': 'host.docker.internal',
+        'PORT': '3307',
+    }
+}
+
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("redis://:changeMe@host.docker.intrenal:6379/0")],
+        },
+    },
+}
+
 
 
 # Password validation
@@ -116,5 +135,9 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# mysite/settings.py
+# Channels
+ASGI_APPLICATION = 'tmcro_api.asgi.application'
 
 from .settings_local import *

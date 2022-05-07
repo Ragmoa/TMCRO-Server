@@ -20,3 +20,10 @@ services:
     restart: on-failure
     ports:
       - "8000:8000"
+  
+  redis:
+    image: redis:7
+    command: redis-server
+    restart: always
+    ports:
+      - "6379:6379"
