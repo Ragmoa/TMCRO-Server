@@ -28,14 +28,11 @@ class RoomConsumer(AsyncWebsocketConsumer):
         ## Only allow the user to connect if they're in the room
         ## wait for check to process before accepting connection
         if  (await self.in_room(self.roomId,self.userId)):
-            print('ok')
             self.accept()
         else:
-            print('nok')
             self.close()
 
     async def disconnect(self, close_code):
-        print("disconnected")
         await self.markUserDisconnected(close_code)
 
     def receive(self, text_data):
@@ -55,7 +52,7 @@ class RoomConsumer(AsyncWebsocketConsumer):
             member.save()
             roomHistory= RoomHistory()
             roomHistory.room = room
-            roomHistory.log = "User "+ user.name+" connected"
+            roomHistory.log = user.name+" connected"
             roomHistory.save()
             self.setRoom(room)
             self.setUser(user)
@@ -75,7 +72,7 @@ class RoomConsumer(AsyncWebsocketConsumer):
             self.member.save()
             roomHistory= RoomHistory()
             roomHistory.room = self.room
-            roomHistory.log = "User "+self.user.name+" disconnected, code: "+str(close_code)
+            roomHistory.log = self.user.name+" disconnected, code: "+str(close_code)
             roomHistory.save()
         return
     

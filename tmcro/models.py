@@ -43,11 +43,17 @@ class Member(models.Model):
     class MemberRole(models.IntegerChoices):
         PLAYER = 1
         SPECTATOR = 2
+    
+    class EditorRole(models.IntegerChoices):
+        NOT_EDITOR = 0
+        EDITOR = 1
+        ## Special for room creator, can't be removed as Editor
+        ROOM_CREATOR = 2
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     role = models.IntegerField(choices=MemberRole.choices, default=MemberRole.PLAYER)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
-    editor = models.BooleanField(default=False)
+    editor = models.BooleanField(choices=EditorRole.choices, default=EditorRole.NOT_EDITOR)
     # json to store all items/locations. Is null for Spectators
     playerData = models.JSONField(default=dict, blank=True, null=True)
     # Whether the user in connected to the room with WS or not
@@ -60,6 +66,7 @@ class RoomHistory(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     log = models.TextField(max_length=10000,default="Nothing happend here")
     created = models.DateTimeField(auto_now_add=True)
+    
 
     def __str__(self):
         return '[' + self.room.name+ '] - ' +str(self.created) + ' : ' + self.log
